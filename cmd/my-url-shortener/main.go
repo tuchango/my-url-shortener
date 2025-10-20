@@ -41,20 +41,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	// id, err := storage.SaveURL("https://google.com", "ggl")
-	// if err != nil {
-	// 	log.Error("failed to save url", sl.Err(err))
-	// 	os.Exit(1)
-	// }
-
-	// urlRes, err := storage.GetURL("ggl")
-	// if err != nil {
-	// 	log.Error("failed to get url", sl.Err(err))
-	// 	os.Exit(1)
-	// }
-
-	// TODO: init router: chi, chi render
-	// TODO: comrare chi and net/http
+	// init chi router
 
 	router := chi.NewRouter()
 
@@ -64,14 +51,14 @@ func main() {
 	// router.Use(middleware.Logger)
 	// TODO: зачем этот middleware, если всё равно создается log и передается во все функции?
 	router.Use(mwLogger.New(log))
-
 	router.Use(middleware.Recoverer)
 	router.Use(middleware.URLFormat) // позволяет оперировать url-паратеметрами в net/http
 
 	router.Route("/url", func(r chi.Router) {
 		r.Use(middleware.BasicAuth("my-url-shortener", map[string]string{
-			cfg.HTTPServer.Username: cfg.HTTPServer.Password,
+			cfg.Username: cfg.Password,
 		}))
+
 		r.Post("/", save.New(log, storage))
 		r.Delete("/{alias}", urlDelete.New(log, storage)) // FIXME: returns ok when alias not found
 	})
