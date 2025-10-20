@@ -42,20 +42,21 @@ func New(log *slog.Logger, urlDeleter URLDeleter) http.HandlerFunc {
 			if errors.Is(err, storage.ErrURLNotFound) {
 				log.Info("alias not found", "alias", alias)
 
-				render.JSON(w, r, resp.Error("not found"))
+				w.WriteHeader(http.StatusNoContent)
 
 				return
 			}
 
 			log.Error("failed to delete url", sl.Err(err))
 
-			render.JSON(w, r, resp.Error("internal error"))
+			w.WriteHeader(http.StatusNoContent)
 
 			return
 		}
 
 		log.Info("got url")
 
-		render.JSON(w, r, resp.OK())
+		w.WriteHeader(http.StatusNoContent)
+
 	}
 }
