@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/tuchango/my-url-shortener/internal/config"
+	urlDelete "github.com/tuchango/my-url-shortener/internal/http-server/handlers/url/delete"
 	"github.com/tuchango/my-url-shortener/internal/http-server/handlers/url/redirect"
 	"github.com/tuchango/my-url-shortener/internal/http-server/handlers/url/save"
 	mwLogger "github.com/tuchango/my-url-shortener/internal/http-server/middleware/logger"
@@ -69,6 +70,7 @@ func main() {
 
 	router.Post("/url", save.New(log, storage))
 	router.Get("/{alias}", redirect.New(log, storage))
+	router.Delete("/{alias}", urlDelete.New(log, storage)) // FIXME: returns ok when alias not found
 
 	log.Info("starting server", slog.String("address", cfg.Address))
 
