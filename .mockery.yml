@@ -18,3 +18,6 @@ packages:
   github.com/tuchango/my-url-shortener/internal/http-server/handlers/url/redirect:
     config:
       all: true
+  github.com/tuchango/my-url-shortener/internal/http-server/handlers/url/delete:
+    config:
+      all: true
