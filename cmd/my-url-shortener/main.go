@@ -68,9 +68,15 @@ func main() {
 	router.Use(middleware.Recoverer)
 	router.Use(middleware.URLFormat) // позволяет оперировать url-паратеметрами в net/http
 
-	router.Post("/url", save.New(log, storage))
+	router.Route("/url", func(r chi.Router) {
+		r.Use(middleware.BasicAuth("my-url-shortener", map[string]string{
+			cfg.HTTPServer.Username: cfg.HTTPServer.Password,
+		}))
+		r.Post("/", save.New(log, storage))
+		r.Delete("/{alias}", urlDelete.New(log, storage)) // FIXME: returns ok when alias not found
+	})
+
 	router.Get("/{alias}", redirect.New(log, storage))
-	router.Delete("/{alias}", urlDelete.New(log, storage)) // FIXME: returns ok when alias not found
 
 	log.Info("starting server", slog.String("address", cfg.Address))
 

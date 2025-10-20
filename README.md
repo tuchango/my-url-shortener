@@ -40,7 +40,75 @@ A simple and efficient URL shortening service.
    go run cmd/my-url-shortener/main.go
    ```
 
-### Usage
+## API Endpoints
+
+### URL Management
+
+#### Create Short URL
+```http
+POST /url
+Content-Type: application/json
+
+{
+  "url": "https://example.com/very/long/url",
+  "alias": "optional-custom-alias"  // Optional
+}
+```
+
+**Response:**
+```json
+{
+  "alias": "abc123",
+  "url": "https://example.com/very/long/url",
+  "short_url": "http://localhost:8080/abc123"
+}
+```
+
+#### Get URL Info
+```http
+GET /url/{alias}
+```
+
+**Response:**
+```json
+{
+  "alias": "abc123",
+  "url": "https://example.com/very/long/url",
+  "short_url": "http://localhost:8080/abc123",
+  "created_at": "2024-01-01T10:00:00Z"
+}
+```
+
+#### Redirect to Original URL
+```http
+GET /{alias}
+```
+
+**Response:** 302 Redirect to original URL
+
+#### Delete URL
+```http
+DELETE /url/{alias}
+```
+
+**Response:** 204 No Content
+
+### Health Check
+
+#### Application Status
+```http
+GET /ping
+```
+
+**Response:**
+```json
+{
+  "status": "ok",
+  "timestamp": "2024-01-01T10:00:00Z"
+}
+```
+
+## Usage Examples
 
 #### Shorten a URL
 ```bash
