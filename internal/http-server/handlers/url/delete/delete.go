@@ -19,10 +19,9 @@ type URLDeleter interface {
 	DeleteURL(alias string) error
 }
 
-// TODO: make tests
 func New(log *slog.Logger, urlDeleter URLDeleter) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		const op = "handlers.url.save.New"
+		const op = "handlers.url.delete.New"
 
 		// create logger
 		log = log.With(
@@ -34,6 +33,7 @@ func New(log *slog.Logger, urlDeleter URLDeleter) http.HandlerFunc {
 		if alias == "" {
 			log.Info("alias is empty")
 
+			w.WriteHeader(http.StatusBadRequest)
 			render.JSON(w, r, resp.Error("invalid request"))
 
 			return
@@ -43,21 +43,22 @@ func New(log *slog.Logger, urlDeleter URLDeleter) http.HandlerFunc {
 			if errors.Is(err, storage.ErrURLNotFound) {
 				log.Info("alias not found", "alias", alias)
 
-				w.WriteHeader(http.StatusNoContent)
+				w.WriteHeader(http.StatusNotFound)
+				render.JSON(w, r, resp.Error("not found"))
 
 				return
 			}
 
 			log.Error("failed to delete url", sl.Err(err))
 
-			w.WriteHeader(http.StatusNoContent)
+			w.WriteHeader(http.StatusInternalServerError)
+			render.JSON(w, r, resp.Error("internal server error"))
 
 			return
 		}
 
-		log.Info("got url")
+		log.Info("url deleted successfully")
 
 		w.WriteHeader(http.StatusNoContent)
-
 	}
 }
