@@ -47,12 +47,11 @@ func main() {
 
 	router.Use(middleware.RequestID)
 
-	// TODO: compare 2 loggers
-	// router.Use(middleware.Logger)
+	// router.Use(middleware.Logger) // человекочитаемый text-логгер, для локальной отладки
 	// TODO: зачем этот middleware, если всё равно создается log и передается во все функции?
-	router.Use(mwLogger.New(log))
+	router.Use(mwLogger.New(log)) // json-логгер, для интеграции с elk
 	router.Use(middleware.Recoverer)
-	router.Use(middleware.URLFormat) // позволяет оперировать url-паратеметрами в net/http
+	router.Use(middleware.URLFormat) // позволяет оперировать url-параметрами в net/http
 
 	router.Route("/url", func(r chi.Router) {
 		r.Use(middleware.BasicAuth("my-url-shortener", map[string]string{

@@ -9,7 +9,7 @@ var (
 	charsLen = len(chars)
 )
 
-func GenerateRandomString(len int) string {
+func NewRandomString(len int) string {
 	b := make([]byte, len)
 	for i := range b {
 		b[i] = chars[rand.IntN(charsLen)]

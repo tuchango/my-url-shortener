@@ -69,7 +69,7 @@ func New(log *slog.Logger, urlSaver URLSaver) http.HandlerFunc {
 		alias := req.Alias
 		if alias == "" {
 			// TODO: обход/проверка коллизий. мб есть пост в тгк Тузова
-			alias = random.GenerateRandomString(aliasLength)
+			alias = random.NewRandomString(aliasLength)
 		}
 
 		id, err := urlSaver.SaveURL(req.URL, alias)

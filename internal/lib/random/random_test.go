@@ -34,8 +34,8 @@ func TestNewRandomString(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			str1 := GenerateRandomString(tt.size)
-			str2 := GenerateRandomString(tt.size)
+			str1 := NewRandomString(tt.size)
+			str2 := NewRandomString(tt.size)
 
 			assert.Len(t, str1, tt.size)
 			assert.Len(t, str2, tt.size)
