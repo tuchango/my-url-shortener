@@ -93,7 +93,9 @@ func New(log *slog.Logger, urlSaver URLSaver) http.HandlerFunc {
 
 		log.Info("url added", slog.Int64("id", id))
 
-		// TODO: добавить alias в response
-		render.JSON(w, r, resp.OK())
+		render.JSON(w, r, Response{
+			Response: resp.OK(),
+			Alias:    alias,
+		})
 	}
 }
